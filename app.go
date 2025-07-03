@@ -120,6 +120,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("(SRL-%d) %s -> %s\n", SERIAL, get_real_ip(r), roblox_url)
+	if r.Header.Get("ROBLOSECURITY") != "" {
+		cookie := &http.Cookie{
+			Name:  ".ROBLOSECURITY",
+			Value: r.Header.Get("ROBLOSECURITY"),
+			Path:  "/",
+		}
+
+		r.AddCookie(cookie)
+	}
 
 	resp, status_code, err := make_request(roblox_url, r, get_real_ip(r))
 
