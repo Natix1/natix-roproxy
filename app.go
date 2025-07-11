@@ -121,22 +121,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("(SRL-%d) %s -> %s\n", SERIAL, get_real_ip(r), roblox_url)
-	if r.Header.Get("ROBLOSECURITY") != "" {
-		decoded_roblosecurity, err := base64.StdEncoding.DecodeString(r.Header.Get("ROBLOSECURITY"))
-		if err != nil {
-			http.Error(w, "Error while decoding ROBLOSECURITY! Make sure it is base64-encoded.", 400)
-			return
-		}
-
-		cookie := &http.Cookie{
-			Name:  ".ROBLOSECURITY",
-			Value: string(decoded_roblosecurity),
-			Path:  "/",
-		}
-
-		r.AddCookie(cookie)
-	}
-
 	resp, status_code, err := make_request(roblox_url, r, get_real_ip(r))
 
 	if err != nil {
