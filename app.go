@@ -114,6 +114,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	roblox_url := urlbuilder.String()
+	if r.URL.RawQuery != "" {
+    roblox_url += "?" + r.URL.RawQuery
+	}
 
 	if _, err := url.ParseRequestURI(roblox_url); err != nil {
 		http.Error(w, "Error while building URL", http.StatusInternalServerError)
@@ -128,6 +131,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Proxy encountered error while making request to roblox: "+err.Error(), status_code)
 	}
 
+	w.WriteHeader(status_code)
 	w.Write(resp)
 }
 
